@@ -20,6 +20,16 @@ public enum WaitCondition {
             default -> ExpectedConditions.presenceOfElementLocated(locator);
         };
     }
+    public static ExpectedCondition<WebElement> getCondition(WaitCondition condition, WebElement webElement){
+        return switch (condition){
+            case VISIBLE -> ExpectedConditions.visibilityOf(webElement);
+            case CLICKABLE ->ExpectedConditions.elementToBeClickable(webElement);
+            default -> ExpectedConditions.visibilityOf(webElement);
+        };
+    }
+
+
+
     public static ExpectedCondition<List<WebElement>> getConditionForList(WaitCondition condition, By locator) {
         return switch (condition) {
             case VISIBLE   -> ExpectedConditions.visibilityOfAllElementsLocatedBy(locator);
