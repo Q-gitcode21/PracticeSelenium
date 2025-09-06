@@ -213,7 +213,7 @@ public class WebUI {
             case "tag" -> By.tagName(suffix);
             case "link" -> By.linkText(suffix);
             case "partial_link" -> By.partialLinkText(suffix);
-            default -> By.xpath(suffix);
+            default -> By.xpath(locator);
         };
     }
 
@@ -241,20 +241,63 @@ public class WebUI {
         }
         return null;
     }
-    public List<WebElement> findWebElements(String locator) {
-        return findWebElements(locator,WaitCondition.PRESENCE,DEFAULT_TIMEOUT);
+
+    public WebElement findWebElementInParent(WebElement parentElement, String childLocator) {
+        return findWebElementInParent(parentElement, childLocator, DEFAULT_TIMEOUT);
     }
-    public List<WebElement> findWebElements(String locator,int timeoutInSeconds) {
-        return findWebElements(locator,WaitCondition.PRESENCE,timeoutInSeconds);
+    //  findWebElementFromElement with parentElement and childLocator
+    public WebElement findWebElementInParent(WebElement parentElement, String childLocator, int timeoutInSeconds) {
+
+        try {
+            LOGGER.info("Finding child element '{}' inside parent element '{}' with timeout {}s", childLocator, parentElement, timeoutInSeconds);
+
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutInSeconds));
+            By child = findBy("."+childLocator);
+            WebElement webElement = wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(parentElement, child));
+            LOGGER.info("Found child element '{}' inside parent element '{}' with timeout {}s", childLocator, parentElement,timeoutInSeconds);
+            return webElement;
+        } catch (Exception e) {
+            LOGGER.error("Failed to find child element '{}' inside parent element '{}' with timeout {}s. Root cause: {}", childLocator, parentElement, timeoutInSeconds, e.getMessage());
+        }
+        return null;
+    }
+    public WebElement findWebElementInParent(String parentLocator, String childLocator) {
+        return findWebElementInParent(parentLocator, childLocator, DEFAULT_TIMEOUT);
     }
 
-    public List<WebElement> findWebElements(String locator,WaitCondition condition,int timeoutInSeconds) {
+    public WebElement findWebElementInParent(String parentLocator, String childLocator, int timeoutInSeconds) {
+
+        try {
+            LOGGER.info("Finding child element '{}' inside parent element '{}' with timeout {}s", childLocator, parentLocator, timeoutInSeconds);
+
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutInSeconds));
+            By child = findBy("."+ childLocator);
+            By parent = findBy(parentLocator);
+            WebElement webElement = wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(parent, child));
+            LOGGER.info("Found child element '{}' inside parent element '{}'", childLocator, parentLocator);
+            return webElement;
+        } catch (Exception e) {
+            LOGGER.error("Failed to find child element '{}' inside parent element '{}' with timeout {}s. Root cause: {}", childLocator, parentLocator, timeoutInSeconds, e.getMessage());
+        }
+        return null;
+    }
+
+
+    public List<WebElement> findWebElements(String locator) {
+        return findWebElements(locator, WaitCondition.PRESENCE, DEFAULT_TIMEOUT);
+    }
+
+    public List<WebElement> findWebElements(String locator, int timeoutInSeconds) {
+        return findWebElements(locator, WaitCondition.PRESENCE, timeoutInSeconds);
+    }
+
+    public List<WebElement> findWebElements(String locator, WaitCondition condition, int timeoutInSeconds) {
         List<WebElement> webElementList = null;
         try {
             LOGGER.info("Finding web elements located by '{}' with condition '{}' and timeout {}s", locator, condition, timeoutInSeconds);
-            WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(timeoutInSeconds));
-            webElementList = wait.until(WaitCondition.getConditionForList(condition,findBy(locator)));
-            LOGGER.info("Found {} web elements located by '{}' with condition '{}'", webElementList.size(), locator,condition);
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutInSeconds));
+            webElementList = wait.until(WaitCondition.getConditionForList(condition, findBy(locator)));
+            LOGGER.info("Found {} web elements located by '{}' with condition '{}'", webElementList.size(), locator, condition);
 
         } catch (Exception e) {
             LOGGER.error("Failed to find web elements by locator '{}' with condition '{}' and timeout {}s.Root cause: {}", locator, condition, timeoutInSeconds, e.getMessage());
@@ -289,16 +332,6 @@ public class WebUI {
 
     }
 
-    public void clear(String locator) {
-        WebElement webElement = findWebElement(locator);
-        try {
-            LOGGER.info("Clearing text in web element find by locator '{}' ", locator);
-            webElement.clear();
-            LOGGER.info("Cleared text in web element find by locator '{}' successfully.", locator);
-        } catch (Exception e) {
-            LOGGER.error("Failed to clear text .Root cause: {}", e.getMessage());
-        }
-    }
 
     public void click(String locator) {
         WebElement webElement = findWebElement(locator);
@@ -477,7 +510,7 @@ public class WebUI {
             LOGGER.info("Verifying web element located by '{}' is {}", locator, strExpectedPresent);
 
             if (actualResult == expectedPresent) {
-                LOGGER.info("Web element located by '{}' is {} ", locator, strExpectedPresent);
+                LOGGER.info("Web element located by '{}' is {} as expected", locator, strExpectedPresent);
                 return true;
             } else {
                 LOGGER.error("Web element located by '{}' does not match the expected state: '{}' ", locator, strExpectedPresent);

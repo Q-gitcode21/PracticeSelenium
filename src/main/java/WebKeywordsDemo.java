@@ -96,7 +96,7 @@ public class WebKeywordsDemo {
         webUI.delayInSecond(3);
 
         webUI.inputText(txtFullName,inputText);
-        webUI.clear(txtFullName);
+        webUI.clearText(txtFullName);
         webUI.delayInSecond(3);
 
         webUI.inputText(txtFullName,inputText);
