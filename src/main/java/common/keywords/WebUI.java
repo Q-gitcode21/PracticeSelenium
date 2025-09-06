@@ -212,7 +212,7 @@ public class WebUI {
             case "tag" -> By.tagName(suffix);
             case "link" -> By.linkText(suffix);
             case "partial_link" -> By.partialLinkText(suffix);
-            default -> By.xpath(suffix);
+            default -> By.xpath(locator);
         };
     }
 
@@ -331,16 +331,6 @@ public class WebUI {
 
     }
 
-    public void clear(String locator) {
-        WebElement webElement = findWebElement(locator);
-        try {
-            LOGGER.info("Clearing text in web element find by locator '{}' ", locator);
-            webElement.clear();
-            LOGGER.info("Cleared text in web element find by locator '{}' successfully.", locator);
-        } catch (Exception e) {
-            LOGGER.error("Failed to clear text .Root cause: {}", e.getMessage());
-        }
-    }
 
     public void click(String locator) {
         WebElement webElement = findWebElement(locator);
@@ -509,7 +499,7 @@ public class WebUI {
             LOGGER.info("Verifying web element located by '{}' is {}", locator, strExpectedPresent);
 
             if (actualResult == expectedPresent) {
-                LOGGER.info("Web element located by '{}' is {} ", locator, strExpectedPresent);
+                LOGGER.info("Web element located by '{}' is {} as expected", locator, strExpectedPresent);
                 return true;
             } else {
                 LOGGER.error("Web element located by '{}' does not match the expected state: '{}' ", locator, strExpectedPresent);

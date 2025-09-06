@@ -1,4 +1,4 @@
-package OSType;
+package ostype;
 
 import org.openqa.selenium.Keys;
 
