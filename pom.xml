@@ -17,6 +17,7 @@
         <selenium.version>4.1.0</selenium.version>
         <testng.version>7.11.0</testng.version>
         <webdrivermanager.version>6.2.0</webdrivermanager.version>
+        <javafaker.version>1.0.2</javafaker.version>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
@@ -59,6 +60,12 @@
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
             <version>${webdrivermanager.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>${javafaker.version}</version>
         </dependency>
     </dependencies>
 

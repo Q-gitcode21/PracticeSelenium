@@ -1,6 +1,8 @@
 package common.keywords;
 
-import OSType.OS;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.w3c.dom.html.HTMLFormElement;
+import ostype.OS;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
@@ -10,7 +12,6 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -310,6 +311,16 @@ public class WebUI {
         }
     }
 
+    public void click(WebElement webElement) {
+        try {
+            LOGGER.info("Click to web element");
+            webElement.click();
+            LOGGER.info("Clicked to web element  successfully.");
+        } catch (Exception e) {
+            LOGGER.error("Failed to click to web element   .Root cause: {}", e.getMessage());
+        }
+    }
+
     public void delayInSecond(int seconds) {
         try {
             LOGGER.info("Delaying {} second", seconds);
@@ -546,6 +557,23 @@ public class WebUI {
         return false;
     }
 
+    public boolean verifyElementText(WebElement webElement, String expectedText) {
+
+        try {
+            LOGGER.info("Verifying text of web element ");
+            String actualText = webElement.getText();
+            if (actualText.equals(expectedText)) {
+                LOGGER.info("Actual text '{}' and Expected text '{}' are the same", actualText, expectedText);
+                return true;
+            }
+            LOGGER.error("Actual text '{}' and Expected text '{}' are not the same", actualText, expectedText);
+
+        } catch (Exception e) {
+            LOGGER.error("Failed to verify text of web element . Root cause: {}", e.getMessage());
+        }
+        return false;
+    }
+
     public boolean verifyElementContainsText(String locator, String expectedText) {
         WebElement webElement = findWebElement(locator);
         try {
@@ -623,6 +651,22 @@ public class WebUI {
         return false;
     }
 
+    public boolean verifyAttributeValue(WebElement webElement, String attributeName, String expectedAttributeValue) {
+
+        try {
+            LOGGER.info("Verifying attribute value of attribute '{}' from web element ", attributeName);
+            String actualAttributeValue = webElement.getAttribute(attributeName);
+            if (actualAttributeValue.equals(expectedAttributeValue)) {
+                LOGGER.info("Actual attribute value '{}' and expected attribute value '{}' are the same", actualAttributeValue, expectedAttributeValue);
+                return true;
+            }
+            LOGGER.error("Actual attribute value '{}' and expected attribute value '{}' are not the same", actualAttributeValue, expectedAttributeValue);
+        } catch (Exception e) {
+            LOGGER.error("Failed to verify attribute value of attribute  '{}' from web element. Root cause: {} ", attributeName, e.getMessage());
+        }
+        return false;
+    }
+
     public int getElementWidth(String locator) {
         WebElement webElement = findWebElement(locator);
         try {
@@ -679,6 +723,50 @@ public class WebUI {
             LOGGER.error("Failed to get vertical position of web element locate by '{}'.Root cause: {}", locator, e.getMessage());
         }
         return -1;
+    }
+
+    public void scrollToElement(String locator) {
+
+        WebElement webElement = findWebElement(locator);
+
+        try {
+            LOGGER.info("Scrolling to web element located by '{}'", locator);
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("arguments[0].scrollIntoView();", webElement);
+            LOGGER.info("Scrolled to web element located by '{}' successfully", locator);
+
+        } catch (Exception e) {
+            LOGGER.error("Failed to scroll to web element located by '{}' .Root cause: {}", locator, e.getMessage());
+        }
+    }
+
+    public void submitForm(String locator) {
+        WebElement webElement = findWebElement(locator);
+        try {
+            if (webElement instanceof HTMLFormElement || verifyAttributeValue(webElement, "type", "submit")) {
+                LOGGER.info("Submitting form by web element located by '{}'", locator);
+                webElement.submit();
+                LOGGER.info("Submitted form by web element located by '{}'", locator);
+            } else {
+                LOGGER.error("The element located by '{}' is not a valid submit element", locator);
+            }
+
+        } catch (Exception e) {
+            LOGGER.error("Failed to submit form by web element located by '{}'.Root cause: {}", locator, e.getMessage());
+        }
+    }
+
+    public void clearText(String locator) {
+        try {
+            LOGGER.info("Clearing text in web element located by '{}'", locator);
+            pressCtrlA(locator);
+            pressKeys(locator,Keys.BACK_SPACE);
+
+            LOGGER.info("Cleared text in web element located by '{}' successfully", locator);
+
+        } catch (Exception e) {
+            LOGGER.error("Failed to clear text in web element located by '{}'.Root cause: {}", locator, e.getMessage());
+        }
     }
 
 
