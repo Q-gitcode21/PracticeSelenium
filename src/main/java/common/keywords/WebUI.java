@@ -1,5 +1,7 @@
 package common.keywords;
 
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.w3c.dom.html.HTMLFormElement;
 import ostype.OS;
@@ -799,6 +801,19 @@ public class WebUI {
 
         } catch (Exception e) {
             LOGGER.error("Failed to clear text in web element located by '{}'.Root cause: {}", locator, e.getMessage());
+        }
+    }
+
+    public void hoverToElement(String locator){
+        WebElement webElement = findWebElement(locator);
+        try {
+            LOGGER.info("Hovering to web element located by '{}'",locator);
+            Actions actions= new Actions(driver);
+            actions.moveToElement(webElement).perform();
+            LOGGER.info("Hovered to web element located by '{}'",locator);
+
+        } catch (Exception e) {
+            LOGGER.error("Failed to hover to web element located by '{}'.Root cause: {}",locator,e.getMessage());
         }
     }
 
