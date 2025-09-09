@@ -1,0 +1,39 @@
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<!-- log4j configuration for the test -->
+
+<log4j:configuration
+        xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+    <appender class="org.apache.log4j.RollingFileAppender"
+              name="FILE">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %M %C{3} (%F:%M:%L) - %m%n"/>
+
+        </layout>
+        <param name="File" value="testlog/test.log"/>
+        <param name="Threshold" value="INFO"/>
+        <param name="MaxFileSize" value="100MB"/>
+        <param name="MaxBackupIndex" value="2"/>
+        <param name="Append" value="false"/>
+    </appender>
+
+    <appender class="org.apache.log4j.ConsoleAppender"
+              name="CONSOLE">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %M %C{3} (%F:%M:%L) - %m%n"/>
+
+        </layout>
+        <param name="Threshold" value="INFO"/>
+        <param name="Target" value="System.out"/>
+    </appender>
+
+    <root>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+        <level value="DEBUG"/>
+    </root>
+
+</log4j:configuration>
