@@ -1,5 +1,0 @@
-//url: https://demoqa.com/webtables or https://demo.beeat.dev/elements/web-tables/
-  //US001: Create new user. Verify that User table show the new user
-  //US002: Seaching new user. Verify that User table show the user
-  //US003: Edit user. Verify that User table show the eddited user
-  //US004: Delete user. Verify that User table does not show the deleted user
